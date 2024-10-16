@@ -40,4 +40,4 @@ Each cell (repository) on the list should contain the following information:
  - ipad optimalizations
 
 ## Final words
-- This should serve as a showcase of my general coding style and architectural selection... not as an example of production ready pixel perfect app.
+- This should serve as a showcase of my general coding style and architectural selection. Not as an example of a production ready app.
