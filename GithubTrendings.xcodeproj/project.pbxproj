@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		919E2EBD2CC67FED00D3DB0F /* NetworkImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919E2EBC2CC67FED00D3DB0F /* NetworkImage.swift */; };
 		91AD9FDC2CC26D89008A7023 /* GithubTrendingsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AD9FDB2CC26D89008A7023 /* GithubTrendingsApp.swift */; };
-		91AD9FDE2CC26DC5008A7023 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AD9FDD2CC26DC5008A7023 /* HomeView.swift */; };
+		91AD9FDE2CC26DC5008A7023 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AD9FDD2CC26DC5008A7023 /* HomeScreen.swift */; };
 		91AD9FE02CC28575008A7023 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AD9FDF2CC28575008A7023 /* Route.swift */; };
 		91AD9FE22CC28987008A7023 /* DI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AD9FE12CC28987008A7023 /* DI.swift */; };
 		91AD9FE42CC51560008A7023 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AD9FE32CC51560008A7023 /* AppDelegate.swift */; };
@@ -33,8 +34,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		919E2EBC2CC67FED00D3DB0F /* NetworkImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkImage.swift; sourceTree = "<group>"; };
 		91AD9FDB2CC26D89008A7023 /* GithubTrendingsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubTrendingsApp.swift; sourceTree = "<group>"; };
-		91AD9FDD2CC26DC5008A7023 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		91AD9FDD2CC26DC5008A7023 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		91AD9FDF2CC28575008A7023 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		91AD9FE12CC28987008A7023 /* DI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DI.swift; sourceTree = "<group>"; };
 		91AD9FE32CC51560008A7023 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				BA3FE2DE24F22FAA00708E79 /* Extensions */,
 				BA3FE2DC24F22F8400708E79 /* Localization.swift */,
 				BA3FE2E124F22FD800708E79 /* Logger.swift */,
+				919E2EBC2CC67FED00D3DB0F /* NetworkImage.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -168,7 +171,7 @@
 		BA3FE2EC24F230B700708E79 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				91AD9FDD2CC26DC5008A7023 /* HomeView.swift */,
+				91AD9FDD2CC26DC5008A7023 /* HomeScreen.swift */,
 				BA3FE2F424F239B700708E79 /* GithubDetail */,
 				BA3FE2F324F239A800708E79 /* GithubFavorites */,
 				BA3FE2F224F2399E00708E79 /* GithubList */,
@@ -299,9 +302,10 @@
 				91AD9FE62CC53479008A7023 /* ImageRepository.swift in Sources */,
 				BA3FE2F124F2315300708E79 /* DataProvider.swift in Sources */,
 				BA3FE31E24F2666500708E79 /* GithubFavoritesVM.swift in Sources */,
-				91AD9FDE2CC26DC5008A7023 /* HomeView.swift in Sources */,
+				91AD9FDE2CC26DC5008A7023 /* HomeScreen.swift in Sources */,
 				BA3FE2E924F2304B00708E79 /* Configuration.swift in Sources */,
 				BA3FE2E424F22FDD00708E79 /* Date+Extensions.swift in Sources */,
+				919E2EBD2CC67FED00D3DB0F /* NetworkImage.swift in Sources */,
 				BA3FE2E224F22FD800708E79 /* Logger.swift in Sources */,
 				BA3FE32224F2D40C00708E79 /* JsonDecoding.swift in Sources */,
 				BA3FE32024F2C31D00708E79 /* GithubDetailVM.swift in Sources */,

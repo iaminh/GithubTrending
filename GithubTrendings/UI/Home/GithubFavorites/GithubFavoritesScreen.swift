@@ -12,26 +12,16 @@ struct GithubFavoritesScreen: View {
     @StateObject private var viewModel = GithubFavoritesViewModel()
 
     var body: some View {
-        NavigationView {
-            List(viewModel.cells, id: \.self) { cell in
-                makeCell(cell)
-            }
-            .navigationTitle("Favorites")
+        List(viewModel.cells, id: \.self) { cell in
+            makeCell(cell)
         }
     }
 
     private func makeCell(_ cell: GithubFavoritesViewModel.Cell) -> some View {
         HStack {
-            // Display avatar
-            AsyncImage(url: URL(string: cell.avatarUrl)) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 50, height: 50)
-                    .clipShape(Circle())
-            } placeholder: {
-                ProgressView()
-            }
+            NetworkImage(url: cell.avatarUrl)
+                .frame(width: 50, height: 50)
+                .clipShape(Circle())
 
             VStack(alignment: .leading) {
                 Text(cell.title)
@@ -47,7 +37,7 @@ struct GithubFavoritesScreen: View {
 
             // Bookmark button
             Button(action: cell.onTap) {
-                Image("bookmark.fill")
+                Image("bookmark-f")
                     .foregroundColor(.black)
             }
         }

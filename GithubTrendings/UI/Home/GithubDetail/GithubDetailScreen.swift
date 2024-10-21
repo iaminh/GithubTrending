@@ -21,19 +21,19 @@ struct GithubDetailScreen: View {
                 .font(.body)
                 .padding(.horizontal)
 
-            Text("Language: \(viewModel.language)")
+            Text(viewModel.language)
                 .font(.subheadline)
                 .padding(.horizontal)
 
-            Text("Stars: \(viewModel.stars)")
+            Text(viewModel.stars)
                 .font(.subheadline)
                 .padding(.horizontal)
 
-            Text("Forks: \(viewModel.forks)")
+            Text(viewModel.forks)
                 .font(.subheadline)
                 .padding(.horizontal)
 
-            Text("Created: \(viewModel.created)")
+            Text(viewModel.created)
                 .font(.subheadline)
                 .padding(.horizontal)
 
@@ -44,7 +44,7 @@ struct GithubDetailScreen: View {
                     UIApplication.shared.open(url)
                 }
             }) {
-                Text(NSLocalizedString("open_git", comment: ""))
+                Text("open_git".localized)
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding()

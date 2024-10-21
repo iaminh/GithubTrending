@@ -32,7 +32,7 @@ struct GithubTrendingsApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $router.routes) {
-                HomeView()
+                HomeScreen()
                     .navigationDestination(for: Route.self) { route in
                         switch route {
                         case .favourites:

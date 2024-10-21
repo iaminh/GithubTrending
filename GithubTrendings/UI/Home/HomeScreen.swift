@@ -10,22 +10,18 @@ import SwiftUI
 
 import SwiftUI
 
-struct HomeView: View {
+struct HomeScreen: View {
     @State private var selectedTab = 0
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            NavigationStack {
-                GithubListScreen()
-            }
+            GithubListScreen()
             .tabItem {
                 Label("Repositories", systemImage: "list.dash")
             }
             .tag(0)
 
-            NavigationStack {
-                GithubFavoritesScreen()
-            }
+            GithubFavoritesScreen()
             .tabItem {
                 Label("Favorites", systemImage: "bookmark")
             }
@@ -35,5 +31,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    HomeScreen()
 }

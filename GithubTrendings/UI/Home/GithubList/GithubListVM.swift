@@ -14,7 +14,7 @@ class GithubListViewModel: ObservableObject {
     private var dayRepos: [Repo] = [] {
         didSet {
             if selectedSegment == .day {
-                repos = dayRepos.map { self.createCell(from: $0) }
+                repos = dayRepos.map { self.createCell(from: $0, bookmarkedRepos: bookmarkedRepository.repos.value) }
             }
         }
     }
@@ -22,7 +22,7 @@ class GithubListViewModel: ObservableObject {
     private var weekRepos: [Repo] = [] {
         didSet {
             if selectedSegment == .week {
-                repos = weekRepos.map { self.createCell(from: $0) }
+                repos = weekRepos.map { self.createCell(from: $0, bookmarkedRepos: bookmarkedRepository.repos.value) }
             }
         }
     }
@@ -30,7 +30,7 @@ class GithubListViewModel: ObservableObject {
     private var monthRepos: [Repo] = [] {
         didSet {
             if selectedSegment == .month {
-                repos = monthRepos.map { self.createCell(from: $0) }
+                repos = monthRepos.map { self.createCell(from: $0, bookmarkedRepos: bookmarkedRepository.repos.value) }
             }
         }
     }
@@ -38,6 +38,9 @@ class GithubListViewModel: ObservableObject {
     @Published var selectedSegment: Interval = .day
     @Published var isLoading: Bool = false
     @Published var repos: [Cell] = []
+
+    @Inject
+    private var router: AppRouter
 
     @Inject
     private var dataProvider: DataProvider
@@ -52,27 +55,34 @@ class GithubListViewModel: ObservableObject {
             await loadAllData()
         }
 
-        $selectedSegment
-            .sink { [weak self] interval in
-                guard let self else { return }
-                switch interval {
-                case .day:
-                    repos = dayRepos.map { self.createCell(from: $0) }
-                case .week:
-                    repos = weekRepos.map { self.createCell(from: $0) }
-                case .month:
-                    repos = monthRepos.map { self.createCell(from: $0) }
-                }
+        $selectedSegment.combineLatest(bookmarkedRepository.repos)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] interval, bookmarked in
+                self?.updateCells(interval: interval, bookmarkedRepos: bookmarked)
             }.store(in: &cancellables)
     }
 
-    private func createCell(from repo: Repo) -> Cell {
+    private func updateCells(interval: Interval, bookmarkedRepos: Set<Repo>) {
+        switch interval {
+        case .day:
+            repos = dayRepos.map { self.createCell(from: $0, bookmarkedRepos: bookmarkedRepos) }
+        case .week:
+            repos = weekRepos.map { self.createCell(from: $0, bookmarkedRepos: bookmarkedRepos) }
+        case .month:
+            repos = monthRepos.map { self.createCell(from: $0, bookmarkedRepos: bookmarkedRepos) }
+        }
+    }
+
+    private func createCell(from repo: Repo, bookmarkedRepos: Set<Repo>) -> Cell {
         Cell(
             repo: repo,
-            bookmarked: bookmarkedRepository.repos.value.contains(repo),
+            bookmarked: bookmarkedRepos.contains(repo),
             onTap: { [weak self] in
+                self?.openDetail(repo: repo)
+            },
+            onBookmarkTap: { [weak self] in
                 guard let self else { return }
-                if bookmarkedRepository.repos.value.contains(repo) {
+                if bookmarkedRepos.contains(repo) {
                     bookmarkedRepository.remove(repo: repo)
                 } else {
                     bookmarkedRepository.add(repo: repo)
@@ -126,6 +136,10 @@ class GithubListViewModel: ObservableObject {
         }
     }
 
+    private func openDetail(repo: Repo) {
+        router.push(route: .detail(repo))
+    }
+
     func loadMore() {
         Task {
             print("Loading more...")
@@ -156,14 +170,16 @@ extension GithubListViewModel {
         let bookmarked: Bool
         let avatarUrl: String
 
+        let onBookmarkTap: () -> Void
         let onTap: () -> Void
 
-        init(repo: Repo, bookmarked: Bool, onTap: @escaping () -> Void) {
+        init(repo: Repo, bookmarked: Bool, onTap: @escaping () -> Void, onBookmarkTap: @escaping () -> Void) {
             title = repo.owner.login + "/" + repo.name
             subtitle = repo.description
             self.bookmarked = bookmarked
             avatarUrl = repo.owner.avatarUrl
             self.onTap = onTap
+            self.onBookmarkTap = onBookmarkTap
         }
     }
 }

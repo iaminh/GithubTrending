@@ -22,11 +22,11 @@ class GithubDetailViewModel: ObservableObject {
     init(repo: Repo) {
         self.repo = repo
         self.title = "\(repo.owner.login)/\(repo.name)"
-        self.description = repo.description ?? NSLocalizedString("description_placeholder", comment: "")
-        self.language = repo.language ?? NSLocalizedString("language_placeholder", comment: "")
-        self.stars = String.localizedStringWithFormat(NSLocalizedString("stars_count", comment: ""), String(repo.stargazersCount))
-        self.forks = String.localizedStringWithFormat(NSLocalizedString("forks_count", comment: ""), String(repo.forks))
-        self.created = String.localizedStringWithFormat(NSLocalizedString("created_at", comment: ""), repo.createdAt.toDayString())
+        self.description = repo.description ?? "description_placeholder".localized
+        self.language = repo.language ?? "language_placeholder".localized
+        self.stars = "stars_count".localized + " " + String(repo.stargazersCount)
+        self.forks = "forks_count".localized + " " + String(repo.forks)
+        self.created = "created_at".localized + " " + repo.createdAt.toDayString()
         self.openUrl = URL(string: repo.htmlUrl)
     }
 }

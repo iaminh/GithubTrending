@@ -6,7 +6,7 @@
 //  Copyright © 2024 MinhChu. All rights reserved.
 //
 
-import Foundation
+import SwiftUI
 
 enum Route: Hashable {
     case favourites
