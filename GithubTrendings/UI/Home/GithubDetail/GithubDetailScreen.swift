@@ -57,3 +57,7 @@ struct GithubDetailScreen: View {
         .navigationTitle(viewModel.title)
     }
 }
+
+#Preview {
+    GithubDetailScreen(viewModel: .init(repo: .init(name: "test", owner: .init(avatarUrl: "", login: ""), description: "", forks: 4, stargazersCount: 5, language: "test", createdAt: Date(), htmlUrl: "test")))
+}

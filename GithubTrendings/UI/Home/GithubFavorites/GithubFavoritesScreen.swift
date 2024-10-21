@@ -18,9 +18,6 @@ struct GithubFavoritesScreen: View {
             }
             .navigationTitle("Favorites")
         }
-        .alert(item: $viewModel.selectedRepo) { repo in
-            Alert(title: Text(repo.name), message: Text(repo.description ?? "No description".localized), dismissButton: .default(Text("OK".localized)))
-        }
     }
 
     private func makeCell(_ cell: GithubFavoritesViewModel.Cell) -> some View {
@@ -49,18 +46,11 @@ struct GithubFavoritesScreen: View {
             Spacer()
 
             // Bookmark button
-            Button(action: {
-                guard let index = viewModel.cells.firstIndex(where: { $0.id == cell.id }) else { return }
-//                viewModel.toggleBookmark(for: Array(viewModel.udManager.reposRelay.value)[index])
-            }) {
-                Image(systemName: cell.bookmarked ? "bookmark.fill" : "bookmark")
-                    .foregroundColor(.blue)
+            Button(action: cell.onTap) {
+                Image("bookmark.fill")
+                    .foregroundColor(.black)
             }
         }
         .contentShape(Rectangle())
-        .onTapGesture {
-            guard let index = viewModel.cells.firstIndex(where: { $0.id == cell.id }) else { return }
-            viewModel.selectRepo(at: index)
-        }
     }
 }

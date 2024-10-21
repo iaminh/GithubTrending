@@ -22,36 +22,29 @@ struct GithubListScreen: View {
             .padding()
 
             List {
-                ForEach(viewModel.repos(for: viewModel.selectedSegment)) { repo in
-                    cell(repo: repo)
+                ForEach(viewModel.repos) { repo in
+                    cell(repo: repo, isLast: repo == viewModel.repos.last)
                 }
+                
                 if viewModel.isLoading {
                     ProgressView()
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
-            .onAppear {
-                viewModel.loadData(for: viewModel.selectedSegment)
-            }
-            .refreshable {
-                viewModel.loadData(for: viewModel.selectedSegment)
-            }
-            .onChange(of: viewModel.selectedSegment) { newSegment in
-                viewModel.loadData(for: newSegment)
-            }
         }
         .navigationTitle("Repositories")
     }
 
-    private func cell(repo: Repo) -> some View {
+    private func cell(repo: GithubListViewModel.Cell, isLast: Bool) -> some View {
         HStack {
-            NetworkImage(url: repo.owner.avatarUrl)
+            NetworkImage(url: repo.avatarUrl)
                 .frame(width: 50, height: 50)
                 .cornerRadius(8)
+            
             VStack(alignment: .leading) {
-                Text(repo.owner.login + "/" + repo.name)
+                Text(repo.title)
                     .font(.headline)
-                if let description = repo.description {
+                if let description = repo.subtitle {
                     Text(description)
                         .font(.subheadline)
                         .foregroundColor(.gray)
@@ -60,7 +53,7 @@ struct GithubListScreen: View {
         }
         .onAppear {
             // Trigger loading more data when the last item appears
-            if repo == viewModel.repos(for: viewModel.selectedSegment).last {
+            if isLast && !viewModel.isLoading {
                 viewModel.loadMore()
             }
         }
@@ -121,13 +114,6 @@ extension NetworkImage {
     }
 }
 
-extension GithubListViewModel {
-    func repos(for interval: Interval) -> [Repo] {
-        switch interval {
-        case .day: return dayRepos
-        case .week: return weekRepos
-        case .month: return monthRepos
-        }
-    }
+#Preview {
+    GithubListScreen()
 }
-

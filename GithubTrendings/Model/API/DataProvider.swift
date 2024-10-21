@@ -79,6 +79,6 @@ struct DataProviderImp: DataProvider, Dependency {
 
         let (data, _) = try await URLSession.shared.data(for: request)
         let decodedResponse = try CustomDecoder().decode(GithubResponseDTO.self, from: data)
-        return decodedResponse.items
+        return decodedResponse.items.shuffled() // we randomize for testing purposes
     }
 }

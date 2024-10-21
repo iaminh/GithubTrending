@@ -6,46 +6,69 @@
 //  Copyright © 2020 MinhChu. All rights reserved.
 //
 
+import Combine
 import SwiftUI
+
+@propertyWrapper
+struct UserDefaultCodable<Value: Codable> {
+    let key: String
+    let defaultValue: Value
+
+    var wrappedValue: Value {
+        get {
+            if let data = UserDefaults.standard.data(forKey: key),
+               let decodedValue = try? JSONDecoder().decode(Value.self, from: data) {
+                return decodedValue
+            }
+            return defaultValue
+        }
+        set {
+            if let encodedData = try? JSONEncoder().encode(newValue) {
+                UserDefaults.standard.set(encodedData, forKey: key)
+            }
+        }
+    }
+}
 
 
 protocol BookmarkedRepository {
-    var bookmarkedReposStream: AsyncStream<Set<Repo>> { get }
+    var repos: CurrentValueSubject<Set<Repo>, Never> { get }
+
+    func remove(repo: Repo)
+    func add(repo: Repo)
 }
 
 class BookmarkedRepositoryImp: BookmarkedRepository, Dependency {
-    @AppStorage("bookmarked") private var reposData: Data = UserDefaults.standard.data(forKey: "bookmarked") ?? Data()
+    // Using the custom UserDefaultCodable property wrapper
+    @UserDefaultCodable(key: "bookmarked", defaultValue: Set<Repo>())
+    private var storedRepos: Set<Repo>
 
-    private var repos: Set<Repo> {
-        get {
-            guard let repoArray = try? JSONDecoder().decode([Repo].self, from: reposData) else { return [] }
-            return Set(repoArray)
-        }
-        set {
-            reposData = (try? JSONEncoder().encode(Array(newValue))) ?? Data()
-        }
+    // Use a CurrentValueSubject to hold the current repos state and publish changes
+    var repos: CurrentValueSubject<Set<Repo>, Never>
+
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        repos = .init(.init())
+        repos.send(storedRepos)
+        repos
+            .sink { updatedRepos in
+                self.storedRepos = updatedRepos // This will automatically update UserDefaults
+            }
+            .store(in: &cancellables)
+
     }
 
-    // An async stream that will provide updates
-    private lazy var bookmarkChangesStream = AsyncStream<Set<Repo>> { continuation in
-        continuation.yield(repos)
-
-        let observer = NotificationCenter.default.addObserver(
-            forName: UserDefaults.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) { _ in
-            continuation.yield(self.repos)
-        }
-
-        continuation.onTermination = { _ in
-            NotificationCenter.default.removeObserver(observer)
-        }
+    func remove(repo: Repo) {
+        var updatedRepos = repos.value
+        updatedRepos.remove(repo)
+        repos.send(updatedRepos) // Notify subscribers about the change
     }
 
-    // Async stream publisher for updates
-    var bookmarkedReposStream: AsyncStream<Set<Repo>> {
-        return bookmarkChangesStream
+    func add(repo: Repo) {
+        var updatedRepos = repos.value
+        updatedRepos.insert(repo)
+        repos.send(updatedRepos) // Notify subscribers about the change
     }
-
 }
+
